@@ -1,0 +1,21 @@
+version: '3'
+services:
+  db:
+    container_name: ${APP_NAME}_db
+    build:
+      context: .
+      dockerfile: .docker/db/Dockerfile
+    platform: linux/amd64
+    volumes:
+      - .docker/db/datas:/var/lib/mysql
+      - .docker/db/logs:/var/log/mysql
+      - .docker/db/init:/docker-entrypoint-initdb.d
+      - .docker/db/conf.d:/etc/mysql/conf.d
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - 127.0.0.1:3308:3306
